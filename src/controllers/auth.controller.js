@@ -91,7 +91,7 @@ export const loginUser = asyncHandler( async (req, res) => {
 export const logoutUser = asyncHandler( async (req, res) => {
     const token = req.cookies.token
     if(token) {
-        await BlackList.create({token})
+        await BlackList.create({ token })
     }
     res.clearCookie("token", {
         httpOnly: true,
