@@ -4,7 +4,8 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, "Name is required"],
-    unique: [true, "Username must be unique"]
+    unique: [true, "Username must be unique"],
+    minLength: [3, "Username must be at least 3 characters long"]
   },
   email: {
     type: String,
@@ -14,7 +15,8 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Password is required"]
+    required: [true, "Password is required"],
+    minLength: [6, "Password must be at least 6 characters long"]
   }
 }, {
   timestamps: true
