@@ -69,7 +69,6 @@ export const loginUser = asyncHandler( async (req, res) => {
         }
         const payload = {
             userId: isExistingUser._id,
-            username: isExistingUser.username
         }
     
         const token = jwt.sign(payload, process.env.ACCESS_SECRET_TOKEN, {expiresIn: "1d"})
@@ -78,7 +77,7 @@ export const loginUser = asyncHandler( async (req, res) => {
             secure: process.env.NODE_ENV === "production",
         });
 
-        return res.status(200).json(new ApiResponse(200, {userId: isExistingUser._id, token}, "User logged in successfully"))
+        return res.status(200).json(new ApiResponse(200, {userId: isExistingUser._id, token , username : isExistingUser.username}, "User logged in successfully"))
     } catch (error) {
         throw new ApiError(500, "Error occurred while logging in user")
     }
@@ -105,4 +104,14 @@ export const logoutUser = asyncHandler( async (req, res) => {
     return res.status(200).json(new ApiResponse(200, null, "User logged out successfully"))
 
     
+})
+
+/**
+ * @desc    Get user profile
+ * @route   GET /api/auth/profile
+ * @access  Private
+ * @name   getUserProfile
+ */
+export const getUserProfile = asyncHandler( async (req, res) => {
+
 })
