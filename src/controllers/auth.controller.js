@@ -4,6 +4,7 @@ import ApiError from "../utils/apiError.js"
 import argon2 from "argon2"
 import ApiResponse from "../utils/apiResponse.js"
 import jwt from "jsonwebtoken"
+import BlackList from "../models/blackList.model.js";
 
 /**
  * @desc    Register a new user
@@ -81,4 +82,27 @@ export const loginUser = asyncHandler( async (req, res) => {
     } catch (error) {
         throw new ApiError(500, "Error occurred while logging in user")
     }
+})
+
+/**
+ * @desc    Logout user
+ * @route   POST /api/auth/logout
+ * @access  public
+ */
+export const logoutUser = asyncHandler( async (req, res) => {
+    const token = req.cookies.token
+    if(!token) {
+        throw new ApiError(400, "No token found")
+    }
+    else if(token) {
+      await BlackList.create({token})
+    }
+
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+    })
+    return res.status(200).json(new ApiResponse(200, null, "User logged out successfully"))
+
+    
 })
