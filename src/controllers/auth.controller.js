@@ -66,8 +66,12 @@ export const loginUser = asyncHandler( async (req, res) => {
         if(!isPasswordValid) {
             throw new ApiError(401, "Invalid email or password")
         }
+        const payload = {
+            userId: isExistingUser._id,
+            username: isExistingUser.username
+        }
     
-        const token = jwt.sign({userId: isExistingUser._id , username : isExistingUser.username}, process.env.ACCESS_SECRET_TOKEN, {expiresIn: "1d"})
+        const token = jwt.sign(payload, process.env.ACCESS_SECRET_TOKEN, {expiresIn: "1d"})
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
