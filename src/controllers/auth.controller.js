@@ -90,13 +90,9 @@ export const loginUser = asyncHandler( async (req, res) => {
  */
 export const logoutUser = asyncHandler( async (req, res) => {
     const token = req.cookies.token
-    if(!token) {
-        throw new ApiError(400, "No token found")
+    if(token) {
+        await BlackList.create({token})
     }
-    else if(token) {
-      await BlackList.create({token})
-    }
-
     res.clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -113,5 +109,16 @@ export const logoutUser = asyncHandler( async (req, res) => {
  * @name   getUserProfile
  */
 export const getUserProfile = asyncHandler( async (req, res) => {
+    const {userId} = req.userInfo
 
+    try {
+        const user = await User.findById(userId).select("-password")
+
+        if(!user) {
+            throw new ApiError(404, "User not found")
+        }
+        return res.status(200).json(new ApiResponse(200, user, "User profile fetched successfully"))
+    } catch (error) {
+        throw new ApiError(500, "Error occurred while fetching user profile")
+    }
 })

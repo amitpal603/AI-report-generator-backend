@@ -1,6 +1,6 @@
 import {Router} from "express"
-import { loginUser, logoutUser, registerUser } from "../controllers/auth.controller.js"
-
+import { getUserProfile, loginUser, logoutUser, registerUser } from "../controllers/auth.controller.js"
+import { authUser } from "../middlewares/auth.middleware.js"
 const router = Router()
 
 /**
@@ -22,5 +22,13 @@ router.post("/login", loginUser)
  * @access  public
  */
 router.get("/logout", logoutUser)
+
+/**
+ * @desc    Get user profile
+ * @route   GET /api/auth/profile
+ * @access  Private
+ * @name   getUserProfile
+ */
+router.get("/profile", authUser, getUserProfile)
 
 export default router
